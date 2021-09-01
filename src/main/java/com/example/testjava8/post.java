@@ -30,12 +30,16 @@ public class post {
         //  소요시간 구하기
 
         //  todo 지하철 출발역,도착역 코드 가져오기
-        List<Subway> list = readCsv("/Users/wandol/Downloads/subwayAll.csv");
-        Map<String, Set<Subway>> map = list.stream().collect(Collectors.groupingBy(Subway::getSubwayLine,Collectors.toSet()));
+        List<Subway> list = readCsv("C:\\Users\\user\\IdeaProjects\\test-java8\\subwayTime.csv");
+        for (Subway subway : list) {
+            log.info(subway.toString());
+            log.info("target : {} , source : {}, time : {} ",subway.getTargetSubway(),subway.getSourceSubway(),subway.getTakeMin());
+        }
+        //Map<String, Set<Subway>> map = list.stream().collect(Collectors.groupingBy(Subway::getSubwayLine,Collectors.toSet()));
         //  todo 소요시간 구함.
-        List<Subway> returnList = getTime(map);
+        //List<Subway> returnList = getTime(map);
         //  todo 소요시간 저장.
-        writeCsv(returnList,"/Users/wandol/Downloads/real_sub.csv");
+        //writeCsv(returnList,"C:\\Users\\user\\IdeaProjects\\test-java8\\real_sub.csv");
 
     }
 
@@ -51,7 +55,7 @@ public class post {
     private static List<Subway> getTime(Map<String, Set<Subway>> groupMap) {
         List<Subway> returnList = new ArrayList<>();
         groupMap.entrySet().forEach(map -> {
-            List<Subway> sortedList = map.getValue().stream().sorted(Comparator.comparing(Subway::getSubwayCd))
+            List<Subway> sortedList = map.getValue().stream().sorted(Comparator.comparing(Subway::getEtcCd))
                     .collect(Collectors.toList());
             if(!sortedList.isEmpty()){
                 //Test용 로컬 주소
@@ -67,6 +71,8 @@ public class post {
                             Document doc = Jsoup.parseBodyFragment(Objects.requireNonNull(res.getBody()));
                             Subway sb = sortedList.get(i);
                             sb.setTakeMin(doc.getElementsByTag("totalTime").text());
+                            sb.setSourceSubway(sortedList.get(i).getSubwayNm());
+                            sb.setTargetSubway(sortedList.get(i+1).getSubwayNm());
                             returnList.add(sb);
                         }
                     }

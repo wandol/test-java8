@@ -21,6 +21,12 @@ public class Subway {
     @CsvBindByName(column = "외부코드")
     private String etcCd;
 
-    @CsvBindByName(column = "걸린시간")
+    @CsvBindByName(column = "역간소요분")
     private String takeMin;
+
+    @CsvBindByName(column = "출발지전철역")
+    private String sourceSubway;
+
+    @CsvBindByName(column = "도착지전철역")
+    private String targetSubway;
 }
