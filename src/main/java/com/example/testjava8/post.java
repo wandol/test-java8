@@ -30,11 +30,29 @@ public class post {
         //  소요시간 구하기
 
         //  todo 지하철 출발역,도착역 코드 가져오기
-        List<Subway> list = readCsv("C:\\Users\\user\\IdeaProjects\\test-java8\\subwayTime.csv");
+
+        List<Subway> list = readCsv("/Users/wandol/Documents/development/intellijWorkspace/test-java8/takeMin.csv");
+        List<SubwayVO> list2 = readCsvData("/Users/wandol/Documents/development/intellijWorkspace/test-java8/allsubwayData.csv");
+//        List<Subway> list = readCsv("C:\\Users\\user\\IdeaProjects\\test-java8\\takeMin.csv");
+//        List<SubwayVO> list2 = readCsvData("C:\\Users\\user\\IdeaProjects\\test-java8\\allsubwayData.csv");
         for (Subway subway : list) {
             log.info(subway.toString());
             log.info("target : {} , source : {}, time : {} ",subway.getTargetSubway(),subway.getSourceSubway(),subway.getTakeMin());
         }
+        list2.forEach(v -> {
+            list.forEach(s -> {
+                String sname = v.getSubwayNm().indexOf("역") > 0 ? v.getSubwayNm().replace("역","") :
+                        v.getSubwayNm();
+                if(sname.equals(s.getSubwayNm())) {
+                    v.setSourceSubway(s.getSourceSubway());
+                    v.setTargetSubway(s.getTargetSubway());
+                    v.setTakeMin(s.getTakeMin());
+                }
+            });
+        });
+        list2.forEach(v -> log.info(v.toString()));
+        writeCsv(list2,"/Users/wandol/Documents/development/intellijWorkspace/test-java8/final1.csv");
+
         //Map<String, Set<Subway>> map = list.stream().collect(Collectors.groupingBy(Subway::getSubwayLine,Collectors.toSet()));
         //  todo 소요시간 구함.
         //List<Subway> returnList = getTime(map);
@@ -43,7 +61,7 @@ public class post {
 
     }
 
-    public static void writeCsv(List<Subway> returnList, String path) throws Exception {
+    public static void writeCsv(List<SubwayVO> returnList, String path) throws Exception {
         Writer writer  = new FileWriter(path);
 
         StatefulBeanToCsv sbc = new StatefulBeanToCsvBuilder(writer)
@@ -85,6 +103,12 @@ public class post {
     public static List<Subway> readCsv(String filepath) throws FileNotFoundException {
         return new CsvToBeanBuilder(new FileReader(filepath))
                 .withType(Subway.class)
+                .build()
+                .parse();
+    }
+    public static List<SubwayVO> readCsvData(String filepath) throws FileNotFoundException {
+        return new CsvToBeanBuilder(new FileReader(filepath))
+                .withType(SubwayVO.class)
                 .build()
                 .parse();
     }
