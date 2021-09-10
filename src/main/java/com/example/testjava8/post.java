@@ -31,10 +31,10 @@ public class post {
 
         //  todo 지하철 출발역,도착역 코드 가져오기
 
-        List<Subway> list = readCsv("/Users/wandol/Documents/development/intellijWorkspace/test-java8/takeMin.csv");
-        List<SubwayVO> list2 = readCsvData("/Users/wandol/Documents/development/intellijWorkspace/test-java8/allsubwayData.csv");
-//        List<Subway> list = readCsv("C:\\Users\\user\\IdeaProjects\\test-java8\\takeMin.csv");
-//        List<SubwayVO> list2 = readCsvData("C:\\Users\\user\\IdeaProjects\\test-java8\\allsubwayData.csv");
+//        List<Subway> list = readCsv("/Users/wandol/Documents/development/intellijWorkspace/test-java8/takeMin.csv");
+//        List<SubwayVO> list2 = readCsvData("/Users/wandol/Documents/development/intellijWorkspace/test-java8/allsubwayData.csv");
+        List<Subway> list = readCsv("C:\\Users\\user\\IdeaProjects\\test-java8\\takeMin.csv");
+        List<SubwayVO> list2 = readCsvData("C:\\Users\\user\\IdeaProjects\\test-java8\\allsubwayData.csv");
         for (Subway subway : list) {
             log.info(subway.toString());
             log.info("target : {} , source : {}, time : {} ",subway.getTargetSubway(),subway.getSourceSubway(),subway.getTakeMin());

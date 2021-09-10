@@ -1,15 +1,19 @@
-package com.example.testjava8;
+package com.example.testjava8.commuting;
 
 import com.opencsv.bean.CsvBindByName;
 import lombok.Data;
 
+/**
+ * @User : wspark
+ * @Date : 2021-09-02
+ */
 @Data
-public class Subway {
+public class SubwayTakeTIme {
 
-    @CsvBindByName(column = "역번호")
+    @CsvBindByName(column = "전철역코드")
     private String subwayCd;
 
-    @CsvBindByName(column = "역사명")
+    @CsvBindByName(column = "전철역명")
     private String subwayNm;
 
     @CsvBindByName(column = "전철명명(영문)")
