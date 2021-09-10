@@ -1,9 +1,8 @@
 package com.example.testjava8.commuting;
 
+import com.example.testjava8.commuting.subway.SubwayTransVO;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.extern.slf4j.Slf4j;
-import org.neo4j.driver.Result;
-import org.neo4j.driver.Session;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 public class CsvRead {
     public static void main(String[] args) throws FileNotFoundException {
         // 환승역 연결을 위한 csv read
-        List<SubwayTransVO> list = readCsv("C:\\Neo4j Desktop\\relate-data\\dbmss\\dbms-54c12005-ec3f-4117-bce7-3f5cf3d068ac\\import\\trans-station-time.csv");
+        List<SubwayTransVO> list = readCsv("/resources/csvs/SEB.csv");
         list.forEach(System.out::println);
         makeTransRelationShip(list);
     }

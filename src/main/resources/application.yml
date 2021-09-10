@@ -1,0 +1,6 @@
+bus:
+  api:
+    node:
+      url: http://ws.bus.go.kr/api/rest/busRouteInfo/getStaionByRoute?
+    pos:
+      url: http://ws.bus.go.kr/api/rest/stationinfo/getStationByPos?js

@@ -1,6 +1,8 @@
 package com.example.testjava8.commuting;
 
-import com.konantech.konansearch.KSEARCH;
+import com.example.testjava8.commuting.subway.SubwayTakeTIme;
+import com.example.testjava8.commuting.subway.SubwayTransVO;
+//import com.konantech.konansearch.KSEARCH;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.*;
@@ -217,81 +219,81 @@ public class GraphDbTest implements AutoCloseable {
         return ";";
     }
 
-    public static List<RecruSubVO> dcSearch(String ip, String scn, String where, int limit) throws IOException {
-
-        long handle;
-        int rc = 0;
-        int totalCount = 0;
-        int columnSize;
-        int rowSize;
-        String[] fieldName;
-        String[] fieldData;
-        int offset = 0;
-        String memIdx = "";
-        String memIdx_pre = "";
-        RecruSubVO recruitVO;
-
-        ArrayList<RecruSubVO> resultList = new ArrayList<RecruSubVO>();
-
-        KSEARCH ks = new KSEARCH();
-        handle = ks.CreateHandle();
-
-        ks.SetCharacterEncoding(handle, "UTF-8");
-        while (offset <= totalCount){
-
-            try {
-                rc = ks.Search(handle, ip, scn, where,
-                        "order by rec_idx asc" , "", "", offset, limit, ks.LC_KOREAN, ks.CS_UTF8);
-                if (rc < 0) {
-                    log.info(ks.GetErrorMessage(handle));
-                    return null;
-                }
-            } catch (IOException e) {
-                log.info("Error: " + e.getMessage());
-                return null;
-            }
-
-            totalCount = ks.GetResult_TotalCount(handle);
-            rowSize = ks.GetResult_RowSize(handle);
-            columnSize = ks.GetResult_ColumnSize(handle);
-            fieldName = new String[columnSize];
-            fieldData = new String[columnSize];
-
-            for (int i = 0; i < rowSize; i++) {
-                recruitVO = new RecruSubVO();
-
-                ks.GetResult_ColumnName(handle, fieldName, columnSize);
-                ks.GetResult_Row(handle, fieldData, i);
-                for (int j = 0; j < columnSize; j++) {
-                    if(fieldName[j].equals("rec_idx"))
-                        recruitVO.setRec_idx(fieldData[j]);
-                    if(fieldName[j].equals("loc_mcd"))
-                        recruitVO.setLoc_mcd(fieldData[j]);
-                    if(fieldName[j].equals("loc_bcd"))
-                        recruitVO.setLoc_bcd(fieldData[j]);
-                    if(fieldName[j].equals("cat_mcls"))
-                        recruitVO.setCat_mcls(fieldData[j]);
-                    if(fieldName[j].equals("cat_kewd"))
-                        recruitVO.setCat_kewd(fieldData[j]);
-                    if(fieldName[j].equals("company_nm"))
-                        recruitVO.setCompany_nm(fieldData[j]);
-                    if(fieldName[j].equals("title"))
-                        recruitVO.setTitle(fieldData[j]);
-                    if(fieldName[j].equals("apply_cnt"))
-                        recruitVO.setApply_cnt(fieldData[j]);
-                    if(fieldName[j].equals("closing_dt"))
-                        recruitVO.setClosing_dt(fieldData[j]);
-                    if(fieldName[j].equals("subway_cd"))
-                        recruitVO.setSubway_cd(fieldData[j]);
-                    if(fieldName[j].equals("subway_cd_distance"))
-                        recruitVO.setSubway_cd_distance(fieldData[j]);
-                }
-                resultList.add(recruitVO);
-            }
-            offset += limit;
-        }
-        return resultList;
-    }
+//    public static List<RecruSubVO> dcSearch(String ip, String scn, String where, int limit) throws IOException {
+//
+//        long handle;
+//        int rc = 0;
+//        int totalCount = 0;
+//        int columnSize;
+//        int rowSize;
+//        String[] fieldName;
+//        String[] fieldData;
+//        int offset = 0;
+//        String memIdx = "";
+//        String memIdx_pre = "";
+//        RecruSubVO recruitVO;
+//
+//        ArrayList<RecruSubVO> resultList = new ArrayList<RecruSubVO>();
+//
+//        KSEARCH ks = new KSEARCH();
+//        handle = ks.CreateHandle();
+//
+//        ks.SetCharacterEncoding(handle, "UTF-8");
+//        while (offset <= totalCount){
+//
+//            try {
+//                rc = ks.Search(handle, ip, scn, where,
+//                        "order by rec_idx asc" , "", "", offset, limit, ks.LC_KOREAN, ks.CS_UTF8);
+//                if (rc < 0) {
+//                    log.info(ks.GetErrorMessage(handle));
+//                    return null;
+//                }
+//            } catch (IOException e) {
+//                log.info("Error: " + e.getMessage());
+//                return null;
+//            }
+//
+//            totalCount = ks.GetResult_TotalCount(handle);
+//            rowSize = ks.GetResult_RowSize(handle);
+//            columnSize = ks.GetResult_ColumnSize(handle);
+//            fieldName = new String[columnSize];
+//            fieldData = new String[columnSize];
+//
+//            for (int i = 0; i < rowSize; i++) {
+//                recruitVO = new RecruSubVO();
+//
+//                ks.GetResult_ColumnName(handle, fieldName, columnSize);
+//                ks.GetResult_Row(handle, fieldData, i);
+//                for (int j = 0; j < columnSize; j++) {
+//                    if(fieldName[j].equals("rec_idx"))
+//                        recruitVO.setRec_idx(fieldData[j]);
+//                    if(fieldName[j].equals("loc_mcd"))
+//                        recruitVO.setLoc_mcd(fieldData[j]);
+//                    if(fieldName[j].equals("loc_bcd"))
+//                        recruitVO.setLoc_bcd(fieldData[j]);
+//                    if(fieldName[j].equals("cat_mcls"))
+//                        recruitVO.setCat_mcls(fieldData[j]);
+//                    if(fieldName[j].equals("cat_kewd"))
+//                        recruitVO.setCat_kewd(fieldData[j]);
+//                    if(fieldName[j].equals("company_nm"))
+//                        recruitVO.setCompany_nm(fieldData[j]);
+//                    if(fieldName[j].equals("title"))
+//                        recruitVO.setTitle(fieldData[j]);
+//                    if(fieldName[j].equals("apply_cnt"))
+//                        recruitVO.setApply_cnt(fieldData[j]);
+//                    if(fieldName[j].equals("closing_dt"))
+//                        recruitVO.setClosing_dt(fieldData[j]);
+//                    if(fieldName[j].equals("subway_cd"))
+//                        recruitVO.setSubway_cd(fieldData[j]);
+//                    if(fieldName[j].equals("subway_cd_distance"))
+//                        recruitVO.setSubway_cd_distance(fieldData[j]);
+//                }
+//                resultList.add(recruitVO);
+//            }
+//            offset += limit;
+//        }
+//        return resultList;
+//    }
 
     public void recruitNodeCreate(List<RecruSubVO> list){
         try ( Session session = driver.session() )
@@ -333,10 +335,10 @@ public class GraphDbTest implements AutoCloseable {
             gt.makeTransRelationShip(list1);
 
             //  todo 공고데이터 get 및 노드 생성
-            List<RecruSubVO> recList = dcSearch("10.100.0.112:6166","recruit_search_graph","subway_cd != '0'",1000);
-            gt.recruitNodeCreate(recList);
-            Objects.requireNonNull(recList).forEach(v -> log.info(v.toString()));
-            gt.makeRecruRelationShip(recList);
+//            List<RecruSubVO> recList = dcSearch("10.100.0.112:6166","recruit_search_graph","subway_cd != '0'",1000);
+//            gt.recruitNodeCreate(recList);
+//            Objects.requireNonNull(recList).forEach(v -> log.info(v.toString()));
+//            gt.makeRecruRelationShip(recList);
 
             //  todo 공고데이터 지하철역 연결 ( code 값 )
 
