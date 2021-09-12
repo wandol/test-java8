@@ -14,6 +14,16 @@ public final class Constants {
     //  서울 버스 노선 정보 csv 경로
     public static final String SEOUL_BUS_ALL_NODE_INFO_CSV_PATH = "csvs/SEB-ROUTE-ID-LIST.csv";
 
+    //  서울 버스 전체 노선에 대한 개별 경로
+    public static final String SEOUL_BUS_ALL_NODE_PATH_INFO_CSV_PATH = "/Users/wandol/Documents/development/intellijWorkspace/test-java8/src/main/resources/csvs/SEB-ALL-STATION.csv";
+
     //  서울 버스 정류장 정보 csv 경로
     public static final String SEOUL_BUS_ALL_ST_INFO_CSV_PATH = "csvs/SEB.csv";
+
+    //  수도권 지하철 소요시간 정보 csv 경로
+    public static final String METRO_TAKEMIN_INFO_CSV_PATH = "csvs/METRO-TAKEMIN.csv";
+
+    //  수도권 지하철 환승 소요시간 정보 csv 경로
+    public static final String METRO_TRANS_TAKEMIN_INFO_CSV_PATH = "csvs/METRO-TRANS.csv";
+
 }

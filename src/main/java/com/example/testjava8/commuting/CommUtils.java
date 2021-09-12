@@ -30,8 +30,6 @@ import java.util.stream.IntStream;
 @Slf4j
 public class CommUtils {
 
-    @Autowired
-    public Environment env;
     /**
      *  csv 파일 읽어 리스트 vo로 반환.
      * @param type
@@ -40,7 +38,7 @@ public class CommUtils {
      * @return
      * @throws FileNotFoundException
      */
-    public static <T> List<T> readCsv(Class<T> type, String path) throws IOException {
+    public <T> List<T> readCsv(Class<T> type, String path) throws IOException {
         ClassPathResource resource = new ClassPathResource(path);
         List<T> t = new CsvToBeanBuilder<T>(new FileReader(resource.getFile()))
                 .withType(type)
@@ -56,7 +54,7 @@ public class CommUtils {
      * @param list
      * @param filePath
      */
-    public static void writeDataToCsv(LinkedList<BusStationVO> list, String filePath) {
+    public void writeDataToCsv(LinkedList<BusStationVO> list, String filePath) {
         try {
             CSVWriter writer = new CSVWriter(new FileWriter(filePath));
             String[] cate = {"arsId","beginTm","busRouteId","busRouteNm","direction",
@@ -81,7 +79,7 @@ public class CommUtils {
      * @param apiUrl
      * @return
      */
-    public static LinkedList<BusStationVO> getListVO(String apiUrl) {
+    public LinkedList<BusStationVO> getListVO(String apiUrl) {
         LinkedList<BusStationVO> returnList = new LinkedList<>();
         ResponseEntity<String> res = new RestTemplate().getForEntity(apiUrl, String.class);
         if(res.getBody() != null){
@@ -113,7 +111,7 @@ public class CommUtils {
      * @param paramName
      * @return
      */
-    public static String makeApiUrl(String domain, String paramValue, String paramName) {
+    public String makeApiUrl(String domain, String paramValue, String paramName) {
         StringBuffer returnUrl = new StringBuffer();
         if(domain != null &&!"".equals(domain)){
             returnUrl.append(domain);
