@@ -63,7 +63,7 @@ public class CommUtils {
             list.forEach(v -> {
                 writer.writeNext(new String[]{v.getArsId(),v.getBeginTm(),v.getBusRouteId(),v.getBusRouteNm(),
                         v.getDirection(),v.getGpsX(),v.getGpsY(),v.getLastTm(),v.getPosX(),v.getPosY(),
-                        v.getRouteType(),v.getSectSpd(),v.getSection(),v.getSeq(),v.getStation(),v.getStationNm(),
+                        v.getRouteType(),v.getSectSpd(),v.getSection(),String.valueOf(v.getSeq()),v.getStation(),v.getStationNm(),
                         v.getStationNo(),v.getTransYn(),v.getFullSectDist(),v.getTrnstnid()});
             });
             writer.close();
@@ -127,7 +127,7 @@ public class CommUtils {
      */
     public String makeBusTakeMinBYDistinct(String tempDis) {
         int temp = Integer.parseInt(tempDis);
-        String returnVal = temp/100 <= 0 ? "0" : String.valueOf(temp/100);
+        String returnVal = temp/100 <= 0 ? "1" : String.valueOf(temp/100);
         return returnVal;
     }
 }

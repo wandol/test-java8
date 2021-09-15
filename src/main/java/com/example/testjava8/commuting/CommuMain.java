@@ -73,8 +73,8 @@ public class CommuMain {
 
         //  todo 정류장 리스트 관계형성.
         try {
-            List<BusStationVO> sebStationList = utils.readCsv(BusStationVO.class,
-                    Constants.SEOUL_BUS_ALL_NODE_PATH_INFO_CSV_PATH);
+            List<BusSEBVO> sebStationList = utils.readCsv(BusSEBVO.class,
+                    Constants.SEOUL_BUS_ALL_ST_INFO_CSV_PATH);
             Optional.ofNullable(sebStationList).ifPresent(gt::makeSebRelationShip);
         } catch (IOException e) {
             e.printStackTrace();

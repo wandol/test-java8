@@ -123,10 +123,10 @@ public class GraphDBModule implements AutoCloseable{
         //  정류장 별로 그룹화
         Map<String, Set<BusStationVO>> map = busStationVOS.stream()
                 .collect(Collectors.groupingBy(BusStationVO::getBusRouteId, Collectors.toSet()));
-        System.out.println(map.toString());
         Optional.of(map).ifPresent(list -> {
             list.forEach((key, value) -> {
                 List<BusStationVO> temp = new ArrayList<>(value).stream().sorted(Comparator.comparing(BusStationVO::getSeq)).collect(Collectors.toList());
+                log.info(temp.toString());
                 IntStream.range(0, (temp.size() - 1)).forEach(i -> {
                     String takeMin = "";
                     String tempDis;

@@ -50,7 +50,7 @@ public class BusStationVO implements Serializable {
     private String section;
 
     //  순번
-    private String seq;
+    private int seq;
 
     //  정류소 ID
     private String station;
