@@ -42,7 +42,6 @@ public class CommUtils {
         ClassPathResource resource = new ClassPathResource(path);
         List<T> t = new CsvToBeanBuilder<T>(new FileReader(resource.getFile()))
                 .withType(type)
-                .withFieldAsNull(CSVReaderNullFieldIndicator.BOTH)
                 .withIgnoreEmptyLine(true)
                 .build()
                 .parse();
@@ -119,5 +118,16 @@ public class CommUtils {
             returnUrl.append("&"+paramName+"="+paramValue);
         }
         return returnUrl.toString();
+    }
+
+    /**
+     *  거리(m)로 소요시간을 구한다.
+     *
+     * @param tempDis
+     */
+    public String makeBusTakeMinBYDistinct(String tempDis) {
+        int temp = Integer.parseInt(tempDis);
+        String returnVal = temp/100 <= 0 ? "0" : String.valueOf(temp/100);
+        return returnVal;
     }
 }
