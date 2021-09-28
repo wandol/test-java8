@@ -1,9 +1,9 @@
 package com.example.testjava8.commuting;
 
-import com.example.testjava8.commuting.bus.BusRouteVO;
-import com.example.testjava8.commuting.bus.BusStationVO;
+import com.example.testjava8.commuting.bus.*;
 import com.example.testjava8.commuting.subway.SubwayTakeTIme;
 import com.example.testjava8.commuting.subway.SubwayTransVO;
+import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -15,6 +15,7 @@ import java.util.Optional;
  * @Date : 2021-09-15
  */
 public class CommuMain {
+    @SneakyThrows
     public static void main(String[] args) {
         GraphDBModule gt = new GraphDBModule("bolt://localhost:7687","neo4j","wandol");
         CommUtils utils = new CommUtils();
@@ -28,7 +29,7 @@ public class CommuMain {
         gt.voidQuery(
                 "LOAD CSV FROM 'file:///METRO-ALL.csv' as line " +
                         " CREATE (:Subway {subwayCd: line[0], subwayName:line[3], transGubun:line[6], subwayLine:line[1]," +
-                        " subwayXcon:line[7], subwayYcon:line[8], sriKcode:line[10], sriTcode:line[11], sriMcode:line[12]," +
+                        " subwayXcon:toFloat(line[7]), subwayYcon:toFloat(line[8]), sriKcode:line[10], sriTcode:line[11], sriMcode:line[12]," +
                         " sriBcode:line[13], sriCode:line[14], sriSubwayName:line[15]}) ");
 
         //  지하철역 소요시간 데이터 가져오기
@@ -64,23 +65,24 @@ public class CommuMain {
 
         //  todo 정류장 리스트 graph db 화
         gt.voidQuery(
-                " LOAD CSV WITH HEADERS FROM 'file:///SEB-ALL-STATION.csv' as line " +
-                        " CREATE (:Bus {arsId: line['arsId'], beginTm:line['beginTm'], busRouteId:line['busRouteId'], busRouteNm:line['busRouteNm']," +
-                        "   direction:line['direction'], gpsX:line['gpsX'], gpsY:line['gpsY'], lastTm:line['lastTm'], posX:line['posX'], " +
-                        "   posY:line['posY'], routeType:line['routeType'], sectSpd:line['sectSpd'], section:line['section'], seq:line['seq'], " +
-                        "   station:line['station'], stationNm:line['stationNm'], stationNo:line['stationNo'], transYn:line['transYn'], " +
-                        "   fullSectDist:line['fullSectDist'], trnstnid:line['trnstnid']}) ");
-
+                " LOAD CSV WITH HEADERS FROM 'file:///METRO_SEB_ST_INFO.csv' as line " +
+                        " CREATE (:Bus {ars_id: line['ars_id'], gps_x:line['gps_x'], gps_y:line['gps_y'], pos_x:line['pos_x']," +
+                        "   pos_y:line['pos_y'], trans_yn:line['trans_yn'], st_id:line['st_id'], st_nm:line['st_nm'], " +
+                        "   route_ids:line['route_ids'], route_nms:line['route_nms'], area_nm:line['area_nm']}) ");
+        gt.voidQuery(
+                " LOAD CSV WITH HEADERS FROM 'file:///METRO_GGD_ST_INFO.csv' as line " +
+                        " CREATE (:Bus {ars_id: line['ars_id'], gps_x:line['gps_x'], gps_y:line['gps_y'], pos_x:line['pos_x']," +
+                        "   pos_y:line['pos_y'], st_id:line['st_id'], st_nm:line['st_nm'], " +
+                        "   route_ids:line['route_ids'], route_nms:line['route_nms'], area_nm:line['area_nm']}) ");
         //  todo 정류장 리스트 관계형성.
         try {
-            List<BusSEBVO> sebStationList = utils.readCsv(BusSEBVO.class,
-                    Constants.SEOUL_BUS_ALL_ST_INFO_CSV_PATH);
-            Optional.ofNullable(sebStationList).ifPresent(gt::makeSebRelationShip);
+            List<BusStationVO> sebNodeStationList = utils.readCsv(BusStationVO.class,
+                    Constants.SEOUL_BUS_ALL_NODE_PATH_INFO_CSV_PATH);
+            Optional.ofNullable(sebNodeStationList).ifPresent(gt::makeSebRelationShip);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        
         //  연결종료
         gt.close();
 

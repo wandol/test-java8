@@ -1,0 +1,16 @@
+select	substring_index(group_concat(sbrsi.ars_id SEPARATOR ','), ',', 1) as ars_id ,
+		substring_index(group_concat(sbrsi.st_id SEPARATOR ','), ',', 1) as st_id ,
+		substring_index(group_concat(sbrsi.st_nm SEPARATOR ','), ',', 1) as st_nm ,
+		substring_index(group_concat(sbrsi.gps_x SEPARATOR ','), ',', 1) as gps_x ,
+		substring_index(group_concat(sbrsi.gps_y SEPARATOR ','), ',', 1) as gps_y ,
+		substring_index(group_concat(sbrsi.pos_x SEPARATOR ','), ',', 1) as pos_x ,
+		substring_index(group_concat(sbrsi.pos_y SEPARATOR ','), ',', 1) as pos_y ,
+		substring_index(group_concat(sbrsi.trans_yn SEPARATOR ','), ',', 1) as trans_yn ,
+		'서울'	as area_nm,
+		GROUP_CONCAT(sbrsi.route_id separator '|' ) as route_ids,
+		GROUP_CONCAT(sbrsi.route_nm separator '|' ) as route_nms
+FROM 	commuting.seb_bus_route_st_info sbrsi
+group by st_id ;
+
+
+경기도 버스 API 키 : 3bd23cf67104460e9e88a9835c378355

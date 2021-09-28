@@ -1,0 +1,59 @@
+MATCH (source:Subway {subwayName: 'A'}), (target:Subway {subwayName: 'F'})
+CALL gds.shortestPath.yens.stream('commuting', {
+    sourceNode: source,
+    targetNode: target,
+    k: 3,
+    relationshipWeightProperty: 'cost'
+})
+YIELD index, sourceNode, targetNode, totalCost, nodeIds, costs, path
+RETURN
+    index,
+    gds.util.asNode(sourceNode).subwayName AS sourceNodeName,
+    gds.util.asNode(targetNode).subwayName AS targetNodeName,
+    totalCost,
+    [nodeId IN nodeIds | gds.util.asNode(nodeId).subwayName] AS nodeNames,
+    costs,
+    nodes(path) as path
+ORDER BY index
+
+CALL gds.graph.create(
+    'commuting',
+    '*',
+    'TAKE_MIN',
+    {
+        relationshipProperties: 'cost'
+    }
+)
+
+MATCH (source:Subway {subwayName: ''}), (target:Subway {subwayName: 'Kentish Town'})
+CALL gds.shortestPath.astar.stream('commuting', {
+    sourceNode: source,
+    targetNode: target,
+    latitudeProperty: 'subwayYcon',
+    longitudeProperty: 'subwayXcon',
+    relationshipWeightProperty: 'cost'
+})
+YIELD index, sourceNode, targetNode, totalCost, nodeIds, costs, path
+RETURN
+    index,
+    gds.util.asNode(sourceNode).subwayName AS sourceNodeName,
+    gds.util.asNode(targetNode).subwayName AS targetNodeName,
+    totalCost,
+    [nodeId IN nodeIds | gds.util.asNode(nodeId).subwayName] AS nodeNames,
+    costs,
+    nodes(path) as path
+ORDER BY index
+
+CALL gds.graph.create(
+    'myGraph',
+    'Subway',
+    'TAKE_MIN',
+    {
+        nodeProperties: ['subwayYcon', 'subwayXcon'],
+        relationshipProperties: 'cost'
+    }
+)
+
+CALL gds.graph.drop('myGraph')
+
+Match (n:Bus) where n.route_ids contains '100100156' return n;

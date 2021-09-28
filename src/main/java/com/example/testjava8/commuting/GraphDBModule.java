@@ -127,23 +127,21 @@ public class GraphDBModule implements AutoCloseable{
             list.forEach((key, value) -> {
                 List<BusStationVO> temp = new ArrayList<>(value).stream().sorted(Comparator.comparing(BusStationVO::getSeq)).collect(Collectors.toList());
                 log.info(temp.toString());
-                IntStream.range(0, (temp.size() - 1)).forEach(i -> {
+                IntStream.range(0, (temp.size() - 1)).parallel().forEach(i -> {
                     String takeMin = "";
-                    String tempDis;
+                    String tempDist;
 
-                    if(i <= (temp.size() - 1)) tempDis = temp.get(i + 1).getFullSectDist();
-                    else tempDis = temp.get(i).getFullSectDist();
-                    takeMin = utils.makeBusTakeMinBYDistinct(tempDis);
+                    if(i < (temp.size() - 1)) tempDist = temp.get(i + 1).getFullSectDist();
+                    else tempDist = temp.get(i).getFullSectDist();
+                    takeMin = utils.makeBusTakeMinBYDistinct(tempDist);
 
                     StringBuilder sb = new StringBuilder();
-                    if(i <= (temp.size() - 1)){
-                        sb.append("Match (s:Bus {busRouteId: '").append(temp.get(i).getBusRouteId()).append("',station: '")
-                                .append(temp.get(i).getStation()).append("'}),").append(" (d:Bus {busRouteId: '")
-                                .append(temp.get(i + 1).getBusRouteId()).append("',station: '").append(temp.get(i + 1).getStation()).append("'})");
-                        sb.append(" create (s)-[:TAKE_MIN {cost: ").append(takeMin).append("}]->(d), (d)-[:TAKE_MIN {cost: ")
-                                .append(takeMin).append("}]->(s) ");
+                    if(i < (temp.size() - 1)){
+                        sb.append("Match (s:Bus {st_id: '").append(temp.get(i).getStation()).append("'}),")
+                                .append(" (d:Bus {st_id: '").append(temp.get(i + 1).getStation()).append("'})");
+                        sb.append(" create (s)-[:TAKE_MIN {cost: ").append(takeMin).append("}]->(d) ");
                     }
-                    System.out.println(sb.toString());
+                    log.info(sb.toString());
                     voidQuery(sb.toString());
                 });
             });

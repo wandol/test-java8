@@ -31,10 +31,10 @@ public class BusMain {
         }
         //  todo 노선ID를 가지고 정류장 리스트를 가지고 온다.
         //  http://ws.bus.go.kr/api/rest/busRouteInfo/getStaionByRoute?busRouteId=100100124&serviceKey=
-        LinkedList<BusStationVO> busStationVOLis = getAllBusStByNode(busRouteVOList);
+//        LinkedList<BusStationVO> busStationVOLis = getAllBusStByNode(busRouteVOList);
 
         //  todo 정류장 리스트를 csv로 떨군다. ( db화 )
-        commUtils.writeDataToCsv(busStationVOLis,Constants.SEOUL_BUS_ALL_NODE_PATH_INFO_CSV_PATH);
+//        commUtils.writeDataToCsv(busStationVOLis,Constants.SEOUL_BUS_ALL_NODE_PATH_INFO_CSV_PATH);
 
         //  todo 정류장 리스트 graph db 화
         gt.voidQuery(
@@ -67,17 +67,17 @@ public class BusMain {
      * @param busRouteVOList
      * @return
      */
-    private static LinkedList<BusStationVO> getAllBusStByNode(List<BusRouteVO> busRouteVOList) {
-        CommUtils commUtils = new CommUtils();
-        LinkedList<BusStationVO> returnMap = new LinkedList<>();
-        if(busRouteVOList != null && busRouteVOList.size() > 0){
-            busRouteVOList.forEach(v -> {
-                String url = commUtils.makeApiUrl(Constants.SEOUL_BUS_API_URL,v.getROUTE_ID(),"busRouteId");
-                //  버스 node id 로 정류장 리스트 가져온다.
-                returnMap.addAll(commUtils.getListVO(url));
-            });
-        }
-        return returnMap;
-    }
+//    private static LinkedList<BusStationVO> getAllBusStByNode(List<BusRouteVO> busRouteVOList) {
+//        CommUtils commUtils = new CommUtils();
+//        LinkedList<BusStationVO> returnMap = new LinkedList<>();
+//        if(busRouteVOList != null && busRouteVOList.size() > 0){
+//            busRouteVOList.forEach(v -> {
+//                String url = commUtils.makeApiUrl(Constants.SEOUL_BUS_API_URL,v.getROUTE_ID(),"busRouteId");
+//                //  버스 node id 로 정류장 리스트 가져온다.
+//                returnMap.addAll(commUtils.getListVO(url));
+//            });
+//        }
+//        return returnMap;
+//    }
 
 }
