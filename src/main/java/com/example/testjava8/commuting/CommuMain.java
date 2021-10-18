@@ -1,8 +1,9 @@
 package com.example.testjava8.commuting;
 
 import com.example.testjava8.commuting.bus.*;
-import com.example.testjava8.commuting.subway.SubwayTakeTIme;
+import com.example.testjava8.commuting.subway.SubwayTakeTimeVO;
 import com.example.testjava8.commuting.subway.SubwayTransVO;
+import com.example.testjava8.commuting.subway.SubwayVO;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -23,28 +24,49 @@ public class CommuMain {
         //  전체 초기화
         gt.DELETEAllnode();
 
-        //  ======================================= 지하철 ==================================================
-        //  지하철 노드 그래프디비 로드.
-        //  외부코드,전철명명(영문),전철역명,전철역코드,호선,출발지전철역,도착지전철역,역간소요분,
-        gt.voidQuery(
-                "LOAD CSV FROM 'file:///METRO-ALL.csv' as line " +
-                        " CREATE (:Subway {subwayCd: line[0], subwayName:line[3], transGubun:line[6], subwayLine:line[1]," +
-                        " subwayXcon:toFloat(line[7]), subwayYcon:toFloat(line[8]), sriKcode:line[10], sriTcode:line[11], sriMcode:line[12]," +
-                        " sriBcode:line[13], sriCode:line[14], sriSubwayName:line[15]}) ");
+//        //  ======================================= 지하철 ==================================================
+//        //  지하철 노드 그래프디비 로드.
+//        //  지하철역 소요시간 데이터 가져오기
+//        //  지하철역 환승 소요시간 데이터 가져오기
+//        //  지하철역을 노선별로 연결,
+//        try {
+//            List<SubwayVO> subwayAllData = utils.readCsv(SubwayVO.class, Constants.METRO_SUBWAY_ALL_INFO_CSV_PATH);
+//            Optional.ofNullable(subwayAllData).ifPresent(gt::makeMetroAllNode);
+//            List<SubwayTakeTimeVO> subwayTakeTimes = utils.readCsv(SubwayTakeTimeVO.class,
+//                    Constants.METRO_SUBWAY_TAKEMIN_INFO_CSV_PATH);
+//            List<SubwayTransVO> transTakeTimes = utils.readCsv(SubwayTransVO.class,
+//                    Constants.METRO_SUBWAY_TRANS_TAKEMIN_INFO_CSV_PATH);
+//            Optional.ofNullable(subwayTakeTimes).ifPresent(gt::makeMetroRelationShip);
+//            Optional.ofNullable(transTakeTimes).ifPresent(gt::makeMetroTransRelationShip);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        //  지하철역 소요시간 데이터 가져오기
-        //  지하철역 환승 소요시간 데이터 가져오기
-        //  지하철역을 노선별로 연결,
-        try {
-            List<SubwayTakeTIme> subwayTakeTimes = utils.readCsv(SubwayTakeTIme.class,
-                    Constants.METRO_TAKEMIN_INFO_CSV_PATH);
-            List<SubwayTransVO> transTakeTimes = utils.readCsv(SubwayTransVO.class,
-                    Constants.METRO_TRANS_TAKEMIN_INFO_CSV_PATH);
-            Optional.ofNullable(subwayTakeTimes).ifPresent(gt::makeMetroRelationShip);
-            Optional.ofNullable(transTakeTimes).ifPresent(gt::makeMetroTransRelationShip);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        // TODO: 2021-10-14   버스 GRAPH DB 화 할때 필요한 csv
+        // TODO: 2021-10-14     1.  버스 각 정류장 데이터 ( 서울,인전,경기 )
+        // TODO: 2021-10-14     2.  각 정류장을 연결할 버스 노선 데이터 ( 서울,인천,경기 )
+        // TODO: 2021-10-14     3.  지하철 주변 버스 정류장 데이터.( 지하철역과 정류장 연결 데이터 )
+        // TODO: 2021-10-14     4.
+
+        //  ======================================= 서울버스 ==================================================
+        //  todo 버스 정류장 리스트 create
+        //  서울 버스 정류장 csv -> list vo
+        //  정류장 노드 화.
+        //  todo 버스 노선 연결
+
+        //  지하철 데이터 주변 버스정류장 지하철과 연결
+
+        //  ======================================= 경기버스 ==================================================
+        //  todo 버스 정류장 리스트 create
+        //  todo 버스 노선 연결
+        //  지하철 주변 버스정류장 지하철과 연결
+
+        //  ======================================= 인천버스 ==================================================
+        //  todo 버스 정류장 리스트 create
+        //  todo 버스 노선 연결
+        //  지하철 주변 버스정류장 지하철과 연결
+
 
         //  ======================================= 버스 ==================================================
 
@@ -75,13 +97,13 @@ public class CommuMain {
                         "   pos_y:line['pos_y'], st_id:line['st_id'], st_nm:line['st_nm'], " +
                         "   route_ids:line['route_ids'], route_nms:line['route_nms'], area_nm:line['area_nm']}) ");
         //  todo 정류장 리스트 관계형성.
-        try {
-            List<BusStationVO> sebNodeStationList = utils.readCsv(BusStationVO.class,
-                    Constants.SEOUL_BUS_ALL_NODE_PATH_INFO_CSV_PATH);
-            Optional.ofNullable(sebNodeStationList).ifPresent(gt::makeSebRelationShip);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            List<BusStationVO> sebNodeStationList = utils.readCsv(BusStationVO.class,
+//                    Constants.SEOUL_BUS_ALL_NODE_PATH_INFO_CSV_PATH);
+//            Optional.ofNullable(sebNodeStationList).ifPresent(gt::makeSebRelationShip);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         //  연결종료
         gt.close();

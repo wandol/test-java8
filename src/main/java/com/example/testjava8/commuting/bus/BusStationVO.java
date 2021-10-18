@@ -1,5 +1,6 @@
 package com.example.testjava8.commuting.bus;
 
+import com.opencsv.bean.CsvBindByName;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,63 +12,39 @@ import java.io.Serializable;
 public class BusStationVO implements Serializable {
 
     //  정류소 고유번호
-    private String arsId;
-
-    //  첫차 시간
-    private String beginTm;
-
-    //  노선명
-    private String busRouteNm;
-
-    //  노선 ID
-    private String busRouteId;
-
-    //  진행방향
-    private String direction;
-
-    //  X좌표 (WGS 84)
-    private String gpsX;
-
-    //  Y좌표 (WGS 84)
-    private String gpsY;
-
-    //  막차 시간
-    private String lastTm;
-
-    //  좌표X (GRS80)
-    private String posX;
-
-    //  좌표Y (GRS80)
-    private String posY;
-
-    //  노선 유형 (1:공항, 2:마을, 3:간선, 4:지선, 5:순환, 6:광역, 7:인천, 8:경기, 9:폐지, 0:공용)
-    private String routeType;
-
-    //  구간속도
-    private String sectSpd;
-
-    //  구간 ID
-    private String section;
-
-    //  순번
-    private int seq;
-
-    //  정류소 ID
-    private String station;
-
-    //  정류소 이름
-    private String stationNm;
+    @CsvBindByName(column = "ars_id")
+    private String ars_id;
 
     //  정류소 고유번호
-    private String stationNo;
+    @CsvBindByName(column = "st_id")
+    private String st_id;
 
-    //  회차지 여부 (Y:회차, N:회차지아님)
+    //	정류소 이름.
+    @CsvBindByName(column = "st_nm")
+    private String st_nm;
+
+    //  X좌표 (WGS 84)
+    @CsvBindByName(column = "gps_x")
+    private String gps_x;
+
+    //  Y좌표 (WGS 84)
+    @CsvBindByName(column = "gps_y")
+    private String gps_y;
+
+    //  좌표X (GRS80)
+    @CsvBindByName(column = "pos_x")
+    private String pos_x;
+
+    //  좌표Y (GRS80)
+    @CsvBindByName(column = "pos_y")
+    private String pos_y;
+
+    //  회차지 여부 (Y:회차, N:회차지아님, :알수없음.)
+    @CsvBindByName(column = "trans_yn")
     private String transYn;
 
-    //  정류소간 거리
-    private String fullSectDist;
-
-    //  회차지 정류소ID
-    private String trnstnid;
+    //  도시명
+    @CsvBindByName(column = "city_nm")
+    private String city_nm;
 
 }

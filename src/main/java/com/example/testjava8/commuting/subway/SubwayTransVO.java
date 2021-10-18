@@ -16,11 +16,17 @@ public class SubwayTransVO {
     @CsvBindByName(column = "호선")
     private String subwaySourceLineNm;
 
+    @CsvBindByName(column = "영호선")
+    private String subwaySourceLineEnNm;
+
     @CsvBindByName(column = "환승역명")
     private String subwayNm;
 
     @CsvBindByName(column = "환승노선")
     private String subwayTargetLineNm;
+
+    @CsvBindByName(column = "환승영노선")
+    private String subwayTargetLineEnNm;
 
     @CsvBindByName(column = "환승거리")
     private String transDis;

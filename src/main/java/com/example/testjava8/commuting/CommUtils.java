@@ -54,24 +54,24 @@ public class CommUtils {
      * @param list
      * @param filePath
      */
-    public void writeDataToCsv(LinkedList<BusStationVO> list, String filePath) {
-        try {
-            CSVWriter writer = new CSVWriter(new FileWriter(filePath));
-            String[] cate = {"arsId","beginTm","busRouteId","busRouteNm","direction",
-                    "gpsX","gpsY","lastTm","posX","posY","routeType","sectSpd","section","seq",
-                    "station","stationNm","stationNo","transYn","fullSectDist","trnstnid"};
-            writer.writeNext(cate);
-            list.forEach(v -> {
-                writer.writeNext(new String[]{v.getArsId(),v.getBeginTm(),v.getBusRouteId(),v.getBusRouteNm(),
-                        v.getDirection(),v.getGpsX(),v.getGpsY(),v.getLastTm(),v.getPosX(),v.getPosY(),
-                        v.getRouteType(),v.getSectSpd(),v.getSection(),String.valueOf(v.getSeq()),v.getStation(),v.getStationNm(),
-                        v.getStationNo(),v.getTransYn(),v.getFullSectDist(),v.getTrnstnid()});
-            });
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void writeDataToCsv(LinkedList<BusStationVO> list, String filePath) {
+//        try {
+//            CSVWriter writer = new CSVWriter(new FileWriter(filePath));
+//            String[] cate = {"arsId","beginTm","busRouteId","busRouteNm","direction",
+//                    "gpsX","gpsY","lastTm","posX","posY","routeType","sectSpd","section","seq",
+//                    "station","stationNm","stationNo","transYn","fullSectDist","trnstnid"};
+//            writer.writeNext(cate);
+//            list.forEach(v -> {
+//                writer.writeNext(new String[]{v.getArsId(),v.getBeginTm(),v.getBusRouteId(),v.getBusRouteNm(),
+//                        v.getDirection(),v.getGpsX(),v.getGpsY(),v.getLastTm(),v.getPosX(),v.getPosY(),
+//                        v.getRouteType(),v.getSectSpd(),v.getSection(),String.valueOf(v.getSeq()),v.getStation(),v.getStationNm(),
+//                        v.getStationNo(),v.getTransYn(),v.getFullSectDist(),v.getTrnstnid()});
+//            });
+//            writer.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      *  특정 파라미터로 리스트vo 값 가져오기.
@@ -92,11 +92,8 @@ public class CommUtils {
             e.printStackTrace();
         }
         if(doc != null){
-            Elements resCode = doc.getElementsByTag("resultCode");
-            if(resCode.text().equals("99")){
-                return null;
-            }else{
-                Elements itemList = doc.getElementsByTag(findTagNm);
+            Elements itemList = doc.getElementsByTag(findTagNm);
+            if(itemList != null){
                 ObjectMapper xmlMapper = new XmlMapper();
                 itemList.forEach(vo -> {
                     try {
@@ -155,8 +152,8 @@ public class CommUtils {
         }
     }
 
-    public String getTakeMinData(String url, String duration) throws MalformedURLException {
-        String result = "";
+    public Map<String,String> getTakeMinData(String url) throws MalformedURLException {
+        Map<String,String> result = new HashMap<>();
         BufferedReader in = null;
         try {
             URL obj = new URL(url); // 호출할 url
@@ -168,20 +165,23 @@ public class CommUtils {
             while((line = in.readLine()) != null) { // response를 차례대로 출력
                  sb.append(line);
             }
-            System.out.println(sb.toString());
             JsonParser jsonParser = new JsonParser();
             JsonElement jsonElement = jsonParser.parse(sb.toString());
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             JsonArray jarr = jsonObject.get("staticPaths").getAsJsonArray();
+            if(jarr.size() == 0){
+                jarr = jsonObject.get("paths").getAsJsonArray();
+            }
             for (JsonElement element : jarr) {
                 JsonObject JsonObject = element.getAsJsonObject();
-                String tt = JsonObject.get(duration).getAsString();
-                System.out.println("duration = " + tt);
-
+                result.put("duration",JsonObject.get("duration").getAsString());
+                result.put("distance",JsonObject.get("distance").getAsString());
+                break;
             }
 
         } catch(Exception e) {
             e.printStackTrace();
+            System.out.println("error :: " + url.toString());
         }  finally { if(in != null) try { in.close(); } catch(Exception e) { e.printStackTrace(); } }
 
         return result;

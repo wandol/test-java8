@@ -1,6 +1,5 @@
 package com.example.testjava8.commuting;
 
-import com.example.testjava8.commuting.subway.SubwayTakeTIme;
 import com.example.testjava8.commuting.subway.SubwayTransVO;
 //import com.konantech.konansearch.KSEARCH;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -76,51 +75,51 @@ public class GraphDbTest implements AutoCloseable {
      *  relationship 명은 TAKE_MIN
      * @param list
      */
-    public void makeRelationShip(List<SubwayTakeTIme> list){
-        //  todo 한 호선의 첫 지하철 역의 정보를 가져온다.
-        //  todo 역정보의 소요시간과 다음 역을 가지고 관계 형성.
-        //  todo 다음역정보 를 통해 다시 반복
-        //  지하철 호선별로 나눈다. 호선별로 relationship 생성.
-        Map<String, Set<SubwayTakeTIme>> map = new ConcurrentHashMap<>();
-        if(list != null && list.size() > 0){
-            map = list.stream().collect(Collectors.groupingBy(SubwayTakeTIme::getSubwayLine, Collectors.toSet()));
-        }
-        if(!map.isEmpty()){
-            map.forEach((key, value) -> {
-                List<SubwayTakeTIme> list1 = value.stream().sorted(Comparator.comparing(SubwayTakeTIme::getSubwayCd)).collect(Collectors.toList());
-                for (SubwayTakeTIme vo : list1) {
-//                    log.info(vo.toString());
-                    StringBuffer sb = new StringBuffer();
-                    sb.append("Match (s:Subway {subwayName: '"+vo.getSourceSubway()+"',subwayLine: '"+vo.getSubwayLine()+"'})," +
-                            " (d:Subway {subwayName: '"+vo.getTargetSubway()+"',subwayLine: '"+vo.getSubwayLine()+"'})");
-                    sb.append(" create (s)-[:ROAD {cost: "+vo.getTakeMin()+"}]->(d)");
-                    try (Session session = driver.session()) {
-                        session.writeTransaction(tx -> {
-                            Result result = tx.run(sb.toString());
-                            return 1;
-                        });
-                    }
-                    log.info(sb.toString());
-                }
-                for (SubwayTakeTIme vo : list1) {
-//                    log.info(vo.toString());
-                    StringBuffer sb = new StringBuffer();
-                    sb.append("Match (s:Subway {subwayName: '"+vo.getTargetSubway()+"',subwayLine: '"+vo.getSubwayLine()+"'})," +
-                            " (d:Subway {subwayName: '"+vo.getSourceSubway()+"',subwayLine: '"+vo.getSubwayLine()+"'})");
-                    sb.append(" create (s)-[:ROAD {cost: "+vo.getTakeMin()+"}]->(d)");
-                    try (Session session = driver.session()) {
-                        session.writeTransaction(tx -> {
-                            Result result = tx.run(sb.toString());
-                            log.info(result.consume().query().text());
-                            return 1;
-                        });
-                    }
-                    log.info(sb.toString());
-                }
-            });
-        }
-
-    }
+//    public void makeRelationShip(List<SubwayTakeTIme> list){
+//        //  todo 한 호선의 첫 지하철 역의 정보를 가져온다.
+//        //  todo 역정보의 소요시간과 다음 역을 가지고 관계 형성.
+//        //  todo 다음역정보 를 통해 다시 반복
+//        //  지하철 호선별로 나눈다. 호선별로 relationship 생성.
+//        Map<String, Set<SubwayTakeTIme>> map = new ConcurrentHashMap<>();
+//        if(list != null && list.size() > 0){
+//            map = list.stream().collect(Collectors.groupingBy(SubwayTakeTIme::getSubwayLine, Collectors.toSet()));
+//        }
+//        if(!map.isEmpty()){
+//            map.forEach((key, value) -> {
+//                List<SubwayTakeTIme> list1 = value.stream().sorted(Comparator.comparing(SubwayTakeTIme::getSubwayCd)).collect(Collectors.toList());
+//                for (SubwayTakeTIme vo : list1) {
+////                    log.info(vo.toString());
+//                    StringBuffer sb = new StringBuffer();
+//                    sb.append("Match (s:Subway {subwayName: '"+vo.getSourceSubway()+"',subwayLine: '"+vo.getSubwayLine()+"'})," +
+//                            " (d:Subway {subwayName: '"+vo.getTargetSubway()+"',subwayLine: '"+vo.getSubwayLine()+"'})");
+//                    sb.append(" create (s)-[:ROAD {cost: "+vo.getTakeMin()+"}]->(d)");
+//                    try (Session session = driver.session()) {
+//                        session.writeTransaction(tx -> {
+//                            Result result = tx.run(sb.toString());
+//                            return 1;
+//                        });
+//                    }
+//                    log.info(sb.toString());
+//                }
+//                for (SubwayTakeTIme vo : list1) {
+////                    log.info(vo.toString());
+//                    StringBuffer sb = new StringBuffer();
+//                    sb.append("Match (s:Subway {subwayName: '"+vo.getTargetSubway()+"',subwayLine: '"+vo.getSubwayLine()+"'})," +
+//                            " (d:Subway {subwayName: '"+vo.getSourceSubway()+"',subwayLine: '"+vo.getSubwayLine()+"'})");
+//                    sb.append(" create (s)-[:ROAD {cost: "+vo.getTakeMin()+"}]->(d)");
+//                    try (Session session = driver.session()) {
+//                        session.writeTransaction(tx -> {
+//                            Result result = tx.run(sb.toString());
+//                            log.info(result.consume().query().text());
+//                            return 1;
+//                        });
+//                    }
+//                    log.info(sb.toString());
+//                }
+//            });
+//        }
+//
+//    }
 
     public void makeTransRelationShip(List<SubwayTransVO> list){
         Map<String, Set<SubwayTransVO>> map = new ConcurrentHashMap<>();
@@ -171,13 +170,13 @@ public class GraphDbTest implements AutoCloseable {
         return subway;
     }
 
-    public List<SubwayTakeTIme> readCsv(String filepath) throws FileNotFoundException {
-        List<SubwayTakeTIme> subway = new CsvToBeanBuilder<SubwayTakeTIme>(new FileReader(filepath))
-                .withType(SubwayTakeTIme.class)
-                .build()
-                .parse();
-        return subway;
-    }
+//    public List<SubwayTakeTIme> readCsv(String filepath) throws FileNotFoundException {
+//        List<SubwayTakeTIme> subway = new CsvToBeanBuilder<SubwayTakeTIme>(new FileReader(filepath))
+//                .withType(SubwayTakeTIme.class)
+//                .build()
+//                .parse();
+//        return subway;
+//    }
     public List<SubwayTransVO> readCsv2(String filepath) throws FileNotFoundException {
         List<SubwayTransVO> subway = new CsvToBeanBuilder<SubwayTransVO>(new FileReader(filepath))
                 .withType(SubwayTransVO.class)
@@ -327,8 +326,8 @@ public class GraphDbTest implements AutoCloseable {
             gt.csvLoadAndNodeCreate("FInalSubwayInfo.csv");
 
             //  역간 소요시간 get 및 연결 (road) 생성
-            List<SubwayTakeTIme> list = gt.readCsv("C:\\Neo4j Desktop\\relate-data\\dbmss\\dbms-2ae0785e-c577-4204-a219-a1b82cccf854\\import\\takeMinInfo.csv");
-            gt.makeRelationShip(list);
+//            List<SubwayTakeTIme> list = gt.readCsv("C:\\Neo4j Desktop\\relate-data\\dbmss\\dbms-2ae0785e-c577-4204-a219-a1b82cccf854\\import\\takeMinInfo.csv");
+//            gt.makeRelationShip(list);
 
             //  환승역 데이터 get 및 연결 (road) 생성
             List<SubwayTransVO> list1 = gt.readCsv2("C:\\Neo4j Desktop\\relate-data\\dbmss\\dbms-2ae0785e-c577-4204-a219-a1b82cccf854\\import\\trans-station-time.csv");

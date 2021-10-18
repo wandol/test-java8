@@ -22,6 +22,9 @@ public class SubwayVO {
     @CsvBindByName(column = "노선명")
     private String subwayLine;
 
+    @CsvBindByName(column = "노선영문명")
+    private String subwayEnLine;
+
     @CsvBindByName(column = "노선번호")
     private String subwayLineCd;
 

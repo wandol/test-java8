@@ -27,16 +27,16 @@ public class SubwayMain {
         //  지하철역 소요시간 데이터 가져오기
         //  지하철역 환승 소요시간 데이터 가져오기
         //  지하철역을 노선별로 연결,
-        try {
-            List<SubwayTakeTIme> subwayTakeTimes = utils.readCsv(SubwayTakeTIme.class,
-                    Constants.METRO_TAKEMIN_INFO_CSV_PATH);
-            List<SubwayTransVO> transTakeTimes = utils.readCsv(SubwayTransVO.class,
-                    Constants.METRO_TRANS_TAKEMIN_INFO_CSV_PATH);
-            Optional.ofNullable(subwayTakeTimes).ifPresent(gt::makeMetroRelationShip);
-            Optional.ofNullable(transTakeTimes).ifPresent(gt::makeMetroTransRelationShip);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            List<SubwayTakeTIme> subwayTakeTimes = utils.readCsv(SubwayTakeTIme.class,
+//                    Constants.METRO_TAKEMIN_INFO_CSV_PATH);
+//            List<SubwayTransVO> transTakeTimes = utils.readCsv(SubwayTransVO.class,
+//                    Constants.METRO_TRANS_TAKEMIN_INFO_CSV_PATH);
+//            Optional.ofNullable(subwayTakeTimes).ifPresent(gt::makeMetroRelationShip);
+//            Optional.ofNullable(transTakeTimes).ifPresent(gt::makeMetroTransRelationShip);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         //  Graph name load
 //        gt.voidQuery(
