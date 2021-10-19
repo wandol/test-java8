@@ -50,33 +50,59 @@ public class Main2 {
 //        });
 //        writer.close();
 
-        List<BusStationVO>  real  = new LinkedList<>();
-        List<BusNodeVO> yy = utils.readCsv(BusNodeVO.class,"csvs/METRO-GGDB-NODE-INFO-REAL.csv");
-        Map<String, List<BusNodeVO>> map = yy.stream().collect(Collectors.groupingBy(BusNodeVO::getSt_id));
+//        List<BusStationVO>  real  = new LinkedList<>();
+//        List<BusNodeVO> yy = utils.readCsv(BusNodeVO.class,"csvs/METRO-GGDB-NODE-INFO-REAL.csv");
+//        Map<String, List<BusNodeVO>> map = yy.stream().collect(Collectors.groupingBy(BusNodeVO::getSt_id));
+//
+//        List<BusStationVO> tt = new LinkedList<>();
+//        map.forEach((k,v) -> {
+//            BusStationVO vo = new BusStationVO();
+//            BusNodeVO tempvo = v.get(0);
+//            vo.setArs_id(tempvo.getArs_id());
+//            vo.setSt_id(k);
+//            vo.setGps_x(tempvo.getGps_x());
+//            vo.setGps_y(tempvo.getGps_y());
+//            vo.setPos_x(tempvo.getPos_x());
+//            vo.setPos_y(tempvo.getPos_y());
+//            vo.setCity_nm(tempvo.getCity_nm());
+//            vo.setSt_nm(tempvo.getSt_nm());
+//            vo.setTransYn("");
+//            tt.add(vo);
+//        });
+//
+////          지하철 - 버스 정류장 연결 csv만들기.
+//        CSVWriter writer = new CSVWriter(new FileWriter("d:/METRO-GGDB-ST-INFO.csv"));
+//        String[] cate = {"ars_id","st_id","st_nm","gps_x","gps_y","pos_x","pos_y","trans_yn","city_nm"};
+//        writer.writeNext(cate);
+//        tt.forEach(v -> {
+//            writer.writeNext(new String[]{v.getArs_id(),v.getSt_id(),v.getSt_nm(),v.getGps_x(),v.getGps_y(),v.getPos_x(),
+//                    v.getPos_y(), v.getTransYn(), v.getCity_nm()});
+//        });
+//        writer.close();
 
-        List<BusStationVO> tt = new LinkedList<>();
-        map.forEach((k,v) -> {
-            BusStationVO vo = new BusStationVO();
-            BusNodeVO tempvo = v.get(0);
-            vo.setArs_id(tempvo.getArs_id());
-            vo.setSt_id(k);
-            vo.setGps_x(tempvo.getGps_x());
-            vo.setGps_y(tempvo.getGps_y());
-            vo.setPos_x(tempvo.getPos_x());
-            vo.setPos_y(tempvo.getPos_y());
-            vo.setCity_nm(tempvo.getCity_nm());
-            vo.setSt_nm(tempvo.getSt_nm());
-            vo.setTransYn("");
-            tt.add(vo);
+        List<BusStationVO>  list  = utils.readCsv(BusStationVO.class,"bus/METRO-ICNB-ST-INFO-META.csv");
+        List<BusNodeVO> list2 = utils.readCsv(BusNodeVO.class,"bus/METRO-ICNB-NODE-INFO-META.csv");
+
+        list2.forEach(v-> {
+            List<BusStationVO> temp = list.stream().filter(vv -> vv.getArs_id().equals(v.getArs_id())).collect(Collectors.toList());
+            if(temp.size() > 0){
+                v.setCity_nm(temp.get(0).getCity_nm());
+                v.setGps_x(temp.get(0).getGps_x());
+                v.setGps_y(temp.get(0).getGps_y());
+                v.setPos_x(temp.get(0).getPos_x());
+                v.setPos_y(temp.get(0).getPos_y());
+                v.setSt_id(temp.get(0).getSt_id());
+            }
         });
 
-//          지하철 - 버스 정류장 연결 csv만들기.
-        CSVWriter writer = new CSVWriter(new FileWriter("d:/METRO-GGDB-ST-INFO.csv"));
-        String[] cate = {"ars_id","st_id","st_nm","gps_x","gps_y","pos_x","pos_y","trans_yn","city_nm"};
+        CSVWriter writer = new CSVWriter(new FileWriter("d:/METRO-ICNB-NODE-INFO-META.csv"));
+        String[] cate = {"bus_route_id","bus_route_nm","ars_id","st_id","st_nm","gps_x","gps_y",
+                "pos_x","pos_y","seq","dist_next_st","time_next_st","trn_st_id","city_nm"};
         writer.writeNext(cate);
-        tt.forEach(v -> {
-            writer.writeNext(new String[]{v.getArs_id(),v.getSt_id(),v.getSt_nm(),v.getGps_x(),v.getGps_y(),v.getPos_x(),
-                    v.getPos_y(), v.getTransYn(), v.getCity_nm()});
+        list2.forEach(v -> {
+            writer.writeNext(new String[]{v.getBus_route_id(),v.getBus_route_nm(),v.getArs_id(),v.getSt_id(),
+                    v.getSt_nm(),v.getGps_x(),v.getGps_y(),v.getPos_x(),v.getPos_y(),v.getSeq()
+                    ,v.getDist_next_st(),v.getTime_next_st(),v.getTrn_st_id(),v.getCity_nm()});
         });
         writer.close();
     }
