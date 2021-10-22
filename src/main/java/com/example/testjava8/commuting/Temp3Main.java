@@ -27,14 +27,15 @@ public class Temp3Main {
 
         //  경기도 버스 좌표로 naver api를 이용하여 각 정류소간의 소요시간 산정.
         //  https://map.naver.com/v5/api/transit/directions/point-to-point?start=126.9328667,37.3727833,name=곡란초등학교&goal=126.9316167,37.3751167,name=개나리후문&mode=TIME&lang=ko
-//        List<BusNodeVO> sBusNodeList = utils.readCsv(BusNodeVO.class, "csvs/METRO-SEB-NODE-INFO.csv");
-        List<BusNodeVO> sBusNodeList = utils.readCsv(BusNodeVO.class, "bus/METRO-ICNB-NODE-INFO.csv");
+//        List<BusNodeVO> sBusNodeList = utils.readCsv(BusNodeVO.class, "csvs/METRO-SEB-NODE-INFO-old.csv");
+//        List<BusNodeVO> sBusNodeList = utils.readCsv(BusNodeVO.class, "bus/METRO-ICNB-NODE-INFO.csv");
+        List<BusNodeVO> sBusNodeList = utils.readCsv(BusNodeVO.class,"csvs/METRO-SEB-NODE-INFO.csv");
 
         Map<String,List<BusNodeVO>> map = sBusNodeList.stream().collect(Collectors.groupingBy(BusNodeVO::getBus_route_id));
         AtomicInteger index = new AtomicInteger();
         List<BusNodeVO> resultList = new LinkedList<>();
         map.forEach((s, busNodeVOS) -> {
-            IntStream.range(0, busNodeVOS.size()).forEach( i -> {
+            IntStream.range(0, 1).forEach( i -> {
                 StringBuffer url = new StringBuffer();
                 try {
                     if(i != (busNodeVOS.size() - 1)){
@@ -71,7 +72,7 @@ public class Temp3Main {
 
 
         //  지하철 - 버스 정류장 연결 csv만들기.
-        CSVWriter writer = new CSVWriter(new FileWriter("d:/METRO-ICNB-NODE-INFO-TOBE.csv"));
+        CSVWriter writer = new CSVWriter(new FileWriter("c:/METRO-SEB-NODE-INFO-TOBE.csv"));
         String[] cate = {"bus_route_id","bus_route_nm","ars_id","st_id","st_nm","gps_x","gps_y",
                 "pos_x","pos_y","seq","dist_next_st","time_next_st","trn_st_id","city_nm"};
         writer.writeNext(cate);
