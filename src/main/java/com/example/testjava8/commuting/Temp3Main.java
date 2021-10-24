@@ -35,7 +35,7 @@ public class Temp3Main {
         AtomicInteger index = new AtomicInteger();
         List<BusNodeVO> resultList = new LinkedList<>();
         map.forEach((s, busNodeVOS) -> {
-            IntStream.range(0, 1).forEach( i -> {
+            IntStream.range(0, busNodeVOS.size()).forEach( i -> {
                 StringBuffer url = new StringBuffer();
                 try {
                     if(i != (busNodeVOS.size() - 1)){
@@ -61,7 +61,7 @@ public class Temp3Main {
                     e.printStackTrace();
                 }
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -72,7 +72,7 @@ public class Temp3Main {
 
 
         //  지하철 - 버스 정류장 연결 csv만들기.
-        CSVWriter writer = new CSVWriter(new FileWriter("c:/METRO-SEB-NODE-INFO-TOBE.csv"));
+        CSVWriter writer = new CSVWriter(new FileWriter("D:/METRO-SEB-NODE-INFO-TOBE.csv"));
         String[] cate = {"bus_route_id","bus_route_nm","ars_id","st_id","st_nm","gps_x","gps_y",
                 "pos_x","pos_y","seq","dist_next_st","time_next_st","trn_st_id","city_nm"};
         writer.writeNext(cate);
